@@ -1,0 +1,34 @@
+# Node version from the .nvmrc file
+FROM node:18.19.0
+
+# Set the working directory
+WORKDIR /app
+
+# Enable Corepack to manage Yarn
+RUN corepack enable
+
+# Copy package.json and (if it exists) yarn.lock to the working directory
+COPY package.json .yarnrc.yml yarn.lock ./
+COPY .yarn ./.yarn
+
+# Install the stable version of Yarn
+RUN yarn set version stable
+
+# Install app dependencies using Yarn
+RUN yarn install 
+
+# Copy the rest of the app's source code
+COPY . .
+
+RUN ls -al
+
+# Build the app
+RUN yarn build
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# start app
+CMD ["yarn","dev"]
+
+
